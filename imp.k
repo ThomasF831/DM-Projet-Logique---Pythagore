@@ -1,40 +1,25 @@
-module IMP-SYNTAX
-  imports DOMAINS
-  imports FLOAT
-
-  // Syntaxe des expressions arithmétiques : entiers, variables, addition, soustraction, division, multiplication, etc.
-  syntax AExp ::= Int
-                | Id
-     		| AExp "+" AExp
-		| AExp "-" AExp
-		| AExp "*" AExp
-		| "Carré" AExp
-
-  syntax FExp ::= Float
+m syntax FExp ::= Float
 		| Id
-		| FExp "+." FExp
-		| FExp "-." FExp
-		| FExp "*." FExp
-		| "Carré" FExp
-		| "Norme" 
+		| "NormeCarre." PExp
+		| "Distance." PExp PExp
+		> FExp "*." FExp [strict]
+		> FExp "-." FExp
+		> FExp "+." FExp [strict]
+		>  "Carre." FExp
 
-  syntax TExp ::= "< (" PExp "), (" PExp "), (" PExp ") >"
-
-  syntax PExp ::= FExp
-		       | Fexp "," Liste_coord
-
-  syntax Exp ::= AExp | FExp | TExp | PExp | Liste_coord
+  syntax PExp ::= "(" FExp "," FExp ")"
+		| Id
+		| PExp "+," PExp [prefer]
+		| PExp "-," PExp [prefer]
 
   // Syntaxe des expressions booléennes : booléens, <=, ==, not, and, or, etc.
   syntax  BExp ::= Bool // true et false
-		 | BExp "||" BExp
-		 | BExp "&&" BExp
-		 | "~" BExp
-		 | "Rect" TExp
 
   // Syntaxe des instructions : affectation, if-then-else, while, séquence et bloc.
   syntax Com ::= "(" Com ")" [bracket]
                | "if" BExp "then" Com "else" Com
+
+  syntax Exp ::= AExp | FExp | PExp
 
 endmodule
 
@@ -48,17 +33,28 @@ module IMP
   syntax KResult ::= Com
 
   // Définition de la sémantique des expressions arithmétiques
+
   rule I1 + I2 => I1 +Int I2
   rule I1 - I2 => I1 -Int I2
   rule I1 * I2 => I1 *Int I2
+  rule Carre I1 => I1 *Int I1
 
   // Définition de la sémantique des expressions flottantes
   rule F1 +. F2 => F1 +Float F2
   rule F1 -. F2 => F1 -Float F2
   rule F1 *. F2 => F1 *Float F2
+  rule Carre. F1 => F1 *Float F1
+  rule Distance. ( P1 , P2 ) ( P3 , P4 ) => Carre. ( P1 -. P3 ) +. Carre. ( P2 -. P4 )
+
+  // Définition de la sémantique des expressions vectorielles
+  rule ( P1 , P2 ) +, ( P3 , P4 ) => ( P1 +. P3 , P2 +. P4 )
+  rule ( P1 , P2 ) -, ( P3 , P4 ) => ( P1 -. P3 , P2 -. P4 )
 
   // Définition de la sémantique des expressions booléennes
 
   // Définition de la sémantique des instructions
+
+
+rule ( Exp ) => Exp
 
 endmodule
