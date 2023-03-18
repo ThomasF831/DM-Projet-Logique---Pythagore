@@ -8,17 +8,22 @@ module IMP-SYNTAX
      		| AExp "+" AExp
 		| AExp "-" AExp
 		| AExp "*" AExp
+		| "Carré" AExp
 
   syntax FExp ::= Float
 		| Id
 		| FExp "+." FExp
 		| FExp "-." FExp
 		| FExp "*." FExp
+		| "Carré" FExp
+		| "Norme" 
 
-  syntax TExp ::= "(" AExp "," AExp "," AExp ")"
-		| "(" FExp "," FExp "," FExp ")"
+  syntax TExp ::= "< (" PExp "), (" PExp "), (" PExp ") >"
 
-  syntax Exp ::= AExp | FExp
+  syntax PExp ::= FExp
+		       | Fexp "," Liste_coord
+
+  syntax Exp ::= AExp | FExp | TExp | PExp | Liste_coord
 
   // Syntaxe des expressions booléennes : booléens, <=, ==, not, and, or, etc.
   syntax  BExp ::= Bool // true et false
