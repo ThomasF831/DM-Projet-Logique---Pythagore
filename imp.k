@@ -12,7 +12,7 @@ module IMP-SYNTAX
 		> "Carre" AExp [strict]
 		| "Distance" PAExp PAExp [strict]
      		> AExp "*" AExp [strict]
-		| AExp "+" AExp [strict]
+		> AExp "+" AExp [strict]
 		| AExp "-" AExp [strict]
 
   // Syntaxe des expressions flottantes : entiers, variables, addition, soustraction, division, multiplication, etc.
@@ -23,7 +23,7 @@ module IMP-SYNTAX
 		| "Distance." PFExp PFExp [strict]
 		>  "Carre." FExp [strict]
 		> FExp "*." FExp [strict]
-		> FExp "-." FExp [strict]
+		| FExp "-." FExp [strict]
 		> FExp "+." FExp [strict]
 
   // Syntaxe des couples d'entiers
