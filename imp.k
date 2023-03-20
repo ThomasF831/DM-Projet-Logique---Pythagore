@@ -10,7 +10,7 @@ module IMP-SYNTAX
      		| AExp "+" AExp
 		| AExp "-" AExp
 		| AExp "*" AExp
-		| "Carré" AExp
+		| "Carre" AExp
 
   // Syntaxe des expressions flottantes : entiers, variables, addition, soustraction, division, multiplication, etc.
 
@@ -26,6 +26,8 @@ module IMP-SYNTAX
 
   syntax PAExp ::= "(" AExp "," AExp ")"
 		| Id
+		| PAExp "+," PAExp
+		| PAExp "-," PAExp
 
   // Syntaxe des couples de flottants
 
@@ -34,15 +36,15 @@ module IMP-SYNTAX
 
   // Syntaxe des expressions booléennes : booléens, <=, ==, not, and, or, etc.
   syntax  BExp ::= Bool // true et false
-		| AExp == AExp
-		| AExp =/= AExp
-		| FExp ==. FExp
-		| FExp =/=. FExp
-		> BExp || BExp [strict]
-		| BExp && BExp [strict]
-		| ~ BExp [strict]
-		| Pythagore PAExp PAExp PAExp
-		| Pythagore. PFExp PFExp PFExp
+		| AExp "==" AExp
+		| AExp "=/=" AExp
+		| FExp "==." FExp
+		| FExp "=/=." FExp
+		> BExp "||" BExp [strict]
+		| BExp "&&" BExp [strict]
+		| "~" BExp [strict]
+		| "Pythagore" PAExp PAExp PAExp
+		| "Pythagore." PFExp PFExp PFExp
 
   // Syntaxe des instructions : affectation, if-then-else, while, séquence et bloc.
   syntax Com ::= "(" Com ")" [bracket]
@@ -64,14 +66,14 @@ module IMP
   rule I1 - I2 => I1 -Int I2
   rule I1 * I2 => I1 *Int I2
   rule Carre I1 => I1 *Int I1
-  rule Distance ( P1 , P2 ) ( P3 , P4 ) => Carre ( P1 - P3 ) + Carre ( P2 - P4 )
+  rule Distance ( P1 , P2 ) ( P3 , P4 ) => ( Carre ( P1 - P3 ) ) + ( Carre ( P2 - P4 ) )
 
   // Définition de la sémantique des expressions flottantes
   rule F1 +. F2 => F1 +Float F2
   rule F1 -. F2 => F1 -Float F2
   rule F1 *. F2 => F1 *Float F2
   rule Carre. F1 => F1 *Float F1
-  rule Distance. ( P1 , P2 ) ( P3 , P4 ) => Carre. ( P1 -. P3 ) +. Carre. ( P2 -. P4 )
+  rule Distance. ( P1 , P2 ) ( P3 , P4 ) => ( Carre. ( P1 -. P3 ) ) +. ( Carre. ( P2 -. P4 ) )
 
   // Définition de la sémantique des expressions vectorielles
   rule ( P1 , P2 ) +, ( P3 , P4 ) => ( P1 +. P3 , P2 +. P4 )
@@ -88,8 +90,8 @@ module IMP
   rule false && B2 => false
   rule ~ true => false
   rule ~ false => true
-  rule Pythagore P1 P2 P2 => ( Distance P1 P2 ) == ( ( Distance P1 P3 ) + ( Distance. P2 P3) ) || ( Distance P2 P3 ) == ( ( Distance P1 P2 ) + ( Distance P1 P3) ) ) || ( Distance P2 P3 ) == ( ( Distance P1 P2 ) + ( Distance P1 P3) ) )
-  rule Pythagore. P1 P2 P2 => ( Distance. P1 P2 ) ==. ( ( Distance. P1 P3 ) +. ( Distance. P2 P3) ) || ( Distance. P2 P3 ) ==. ( ( Distance. P1 P2 ) +. ( Distance. P1 P3) ) ) || ( Distance. P2 P3 ) ==. ( ( Distance. P1 P2 ) +. ( Distance. P1 P3) ) )  
+  rule Pythagore P1 P2 P2 => ( Distance P1 P2 ) == ( ( Distance P1 P3 ) + ( Distance P2 P3 ) ) || ( Distance P2 P3 ) == ( ( Distance P1 P2 ) + ( Distance P1 P3 ) ) || ( Distance P2 P3 ) == ( ( Distance P1 P2 ) + ( Distance P1 P3 ) )
+  rule Pythagore. P1 P2 P2 => ( Distance. P1 P2 ) ==. ( ( Distance. P1 P3 ) +. ( Distance. P2 P3 ) ) || ( Distance. P2 P3 ) ==. ( ( Distance. P1 P2 ) +. ( Distance. P1 P3 ) ) || ( Distance. P2 P3 ) ==. ( Distance. P1 P2 ) +. ( Distance. P1 P3 ) )
 
   // Définition de la sémantique des instructions
 
