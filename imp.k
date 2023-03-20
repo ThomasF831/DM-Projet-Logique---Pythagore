@@ -2,25 +2,27 @@ module IMP-SYNTAX
   imports DOMAINS
   imports FLOAT
 
+  syntax KResult ::= Bool | Int | Float
+
   // Syntaxe des expressions arithmétiques : entiers, variables, addition, soustraction, division, multiplication, etc.
 
   syntax AExp ::= Int
                 | Id
-		| "Distance" PAExp PAExp
-     		| AExp "+" AExp
-		| AExp "-" AExp
-		| AExp "*" AExp
-		| "Carre" AExp
+		| "Distance" PAExp PAExp [strict]
+		> "Carre" AExp [strict]
+     		> AExp "*" AExp [strict]
+		| AExp "+" AExp [strict]
+		| AExp "-" AExp [strict]
 
   // Syntaxe des expressions flottantes : entiers, variables, addition, soustraction, division, multiplication, etc.
 
  syntax FExp ::= Float
 		| Id
 		| "Distance." PFExp PFExp
+		>  "Carre." FExp [strict]
 		> FExp "*." FExp [strict]
 		> FExp "-." FExp [strict]
 		> FExp "+." FExp [strict]
-		>  "Carre." FExp [strict]
 
   // Syntaxe des couples d'entiers
 
@@ -33,24 +35,27 @@ module IMP-SYNTAX
 
   syntax PFExp ::= "(" FExp "," FExp ")"
 		| Id
+		| PFExp "+,." PFExp [strict]
+		| PFExp "-,." PFExp [strict]
 
   // Syntaxe des expressions booléennes : booléens, <=, ==, not, and, or, etc.
   syntax  BExp ::= Bool // true et false
-		| AExp "==" AExp
-		| AExp "=/=" AExp
-		| FExp "==." FExp
-		| FExp "=/=." FExp
-		> BExp "||" BExp [strict]
-		| BExp "&&" BExp [strict]
+		| AExp "==" AExp [strict]
+		| AExp "=/=" AExp [strict]
+		| FExp "==." FExp [strict]
+		| FExp "=/=." FExp [strict]
+		> BExp "||" BExp [strict(1)]
+		| BExp "&&" BExp [strict(1)]
 		| "~" BExp [strict]
-		| "Pythagore" PAExp PAExp PAExp
-		| "Pythagore." PFExp PFExp PFExp
+		| "Pythagoricien" PAExp PAExp PAExp [strict]
+		| "Pythagore" PAExp PAExp PAExp [strict]
+		| "Pythagore." PFExp PFExp PFExp [strict]
 
   // Syntaxe des instructions : affectation, if-then-else, while, séquence et bloc.
   syntax Com ::= "(" Com ")" [bracket]
                | "if" BExp "then" Com "else" Com
 
-  syntax Exp ::= AExp | FExp | PAExp | PFExp
+  syntax Exp ::= AExp | FExp | PAExp | PFExp | BExp
 
 endmodule
 
@@ -76,23 +81,25 @@ module IMP
   rule Distance. ( P1 , P2 ) ( P3 , P4 ) => ( Carre. ( P1 -. P3 ) ) +. ( Carre. ( P2 -. P4 ) )
 
   // Définition de la sémantique des expressions vectorielles
-  rule ( P1 , P2 ) +, ( P3 , P4 ) => ( P1 +. P3 , P2 +. P4 )
-  rule ( P1 , P2 ) -, ( P3 , P4 ) => ( P1 -. P3 , P2 -. P4 )
+  rule ( P1 , P2 ) +, ( P3 , P4 ) => ( P1 + P3 , P2 + P4 )
+  rule ( P1 , P2 ) -, ( P3 , P4 ) => ( P1 - P3 , P2 - P4 )
+  rule ( P1 , P2 ) +,. ( P3 , P4 ) => ( P1 +. P3 , P2 +. P4 )
+  rule ( P1 , P2 ) -,. ( P3 , P4 ) => ( P1 -. P3 , P2 -. P4 )
 
   // Définition de la sémantique des expressions booléennes
   rule I1 == I2 => I1 ==Int I2
   rule I1 =/= I2 => I1 =/=Int I2
   rule F1 ==. F2 => F1 ==Float F2
   rule F1 =/=. F2 => F1 =/=Float F2
-  rule true || B2 => true
+  rule true || _ => true
   rule false || B2 => B2
   rule true && B2 => B2
-  rule false && B2 => false
+  rule false && _ => false
   rule ~ true => false
   rule ~ false => true
+  rule Pythagoricien P1 P2 P3 => ( Distance P1 P2 ) == ( ( Distance P1 P3 ) + ( Distance P2 P3 ) )
   rule Pythagore P1 P2 P2 => ( Distance P1 P2 ) == ( ( Distance P1 P3 ) + ( Distance P2 P3 ) ) || ( Distance P2 P3 ) == ( ( Distance P1 P2 ) + ( Distance P1 P3 ) ) || ( Distance P2 P3 ) == ( ( Distance P1 P2 ) + ( Distance P1 P3 ) )
   rule Pythagore. P1 P2 P2 => ( Distance. P1 P2 ) ==. ( ( Distance. P1 P3 ) +. ( Distance. P2 P3 ) ) || ( Distance. P2 P3 ) ==. ( ( Distance. P1 P2 ) +. ( Distance. P1 P3 ) ) || ( Distance. P2 P3 ) ==. ( Distance. P1 P2 ) +. ( Distance. P1 P3 ) )
 
-  // Définition de la sémantique des instructions
 
 endmodule
