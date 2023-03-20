@@ -23,8 +23,8 @@ module IMP-SYNTAX
 		| "Distance." PFExp PFExp [strict]
 		>  "Carre." FExp [strict]
 		> FExp "*." FExp [strict]
-		| FExp "-." FExp [strict]
-		> FExp "+." FExp [strict]
+		> FExp "-." FExp [strict]
+		| FExp "+." FExp [strict]
 
   // Syntaxe des couples d'entiers
 
