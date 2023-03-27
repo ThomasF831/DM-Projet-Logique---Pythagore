@@ -75,7 +75,7 @@ module IMP
   rule I1 * I2 => I1 *Int I2
   rule Carre I1 => I1 *Int I1
   rule Distance ( P1 , P2 ) ( P3 , P4 ) => Carre { P1 - P3 } + Carre { P2 - P4 }
-  rule Pythagore P1 P2 P3 => {{{ { Distance P1 P2 } == { { Distance P1 P3 } + { Distance P2 P3 } } || { Distance P1 P3 } == { { Distance P1 P2 } + { Distance P1 P2 } } }}} || { Distance P2 P3 } == { { Distance P1 P2 } + { Distance P2 P3 } } 
+  rule Pythagore P1 P2 P3 => {{{ { Distance P1 P2 } == { { Distance P1 P3 } + { Distance P2 P3 } } || { Distance P1 P3 } == { { Distance P1 P2 } + { Distance P2 P3 } } }}} || { Distance P2 P3 } == { { Distance P1 P2 } + { Distance P1 P3 } } 
 
   // Définition de la sémantique des expressions flottantes
   rule {{ F1 }} => F1
@@ -84,7 +84,7 @@ module IMP
   rule F1 *. F2 => F1 *Float F2
   rule Carre. F1 => F1 *Float F1
   rule Distance. ( P1 , P2 ) ( P3 , P4 ) => Carre. {{ P1 -. P3 }} +. Carre. {{ P2 -. P4 }}
-  rule Pythagore. P1 P2 P3 => {{{ {{ Distance. P1 P2 }} ==. {{ {{ Distance. P1 P3 }} +. {{ Distance. P2 P3 }} }} || {{ Distance. P1 P3 }} ==. {{ {{ Distance. P1 P2 }} +. {{ Distance. P1 P2 }} }} }}} || {{ Distance. P2 P3 }} ==. {{ {{ Distance. P1 P2 }} +. {{ Distance. P2 P3 }} }} 
+  rule Pythagore. P1 P2 P3 => {{{ {{ Distance. P1 P2 }} ==. {{ {{ Distance. P1 P3 }} +. {{ Distance. P2 P3 }} }} || {{ Distance. P1 P3 }} ==. {{ {{ Distance. P1 P2 }} +. {{ Distance. P2 P3 }} }} }}} || {{ Distance. P2 P3 }} ==. {{ {{ Distance. P1 P2 }} +. {{ Distance. P1 P3 }} }} 
 
   // Définition de la sémantique des expressions vectorielles
   rule ( P1 , P2 ) +, ( P3 , P4 ) => ( P1 + P3 , P2 + P4 )
