@@ -10,7 +10,7 @@ module IMP-SYNTAX
                 | Id
 		> "{" AExp "}" [strict]
 		> "Carre" AExp [strict]
-		| "Distance" PAExp PAExp [strict]
+		| "Distance" PAExp PAExp [function]
      		> AExp "*" AExp [strict]
 		> AExp "+" AExp [strict]
 		| AExp "-" AExp [strict]
@@ -20,11 +20,11 @@ module IMP-SYNTAX
  syntax FExp ::= Float
 		| Id
 		> "{{" FExp "}}" [strict]
-		| "Distance." PFExp PFExp [strict]
+		| "Distance." PFExp PFExp [function]
 		>  "Carre." FExp [strict]
 		> FExp "*." FExp [strict]
-		> FExp "-." FExp [strict]
-		| FExp "+." FExp [strict]
+		| FExp "-." FExp [strict]
+		> FExp "+." FExp [strict]
 
   // Syntaxe des couples d'entiers
 
@@ -50,8 +50,8 @@ module IMP-SYNTAX
 		> BExp "||" BExp [strict(1)]
 		| BExp "&&" BExp [strict(1)]
 		| "~" BExp [strict]
-		| "Pythagore" PAExp PAExp PAExp [strict]
-		| "Pythagore." PFExp PFExp PFExp [strict]
+		| "Pythagore" PAExp PAExp PAExp [function]
+		| "Pythagore." PFExp PFExp PFExp [function]
 
   // Syntaxe des instructions : affectation, if-then-else, while, séquence et bloc.
   syntax Com ::= "(" Com ")" [bracket]
